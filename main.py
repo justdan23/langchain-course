@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,6 +8,10 @@ from langchain_openai import ChatOpenAI
 from langchain_tavily import TavilySearch
 
 from schemas import AgentResponse
+
+from langsmith import Client
+
+client = Client()
 
 tools = [TavilySearch()]
 llm = ChatOpenAI(model="gpt-4o")
@@ -34,6 +39,7 @@ def main():
     structured = result.get("structured_response", None)
     print(structured if structured is not None else result)
 
-
+    # client.wait_for_processing(project_name=f"{os.getenv('LANGCHAIN_PROJECT')}")
+    client.flush()
 if __name__ == "__main__":
     main()
